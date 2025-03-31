@@ -1,0 +1,10 @@
+{% extends 'base.html' %}
+
+{% block title %}Inicio{% endblock %}
+
+{% block content %}
+    <div class="text-center">
+        <h2 class="mt-4">Bienvenido, {{ user.username }}!</h2>
+        <a href="{% url 'create_car' %}" class="btn btn-primary mt-3">Publicar un coche</a>
+    </div>
+{% endblock %}

@@ -1,0 +1,47 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Coches disponibles{% endblock %}
+
+{% block content %}
+<div class="container">
+    {% if username %}
+        <p>Bienvenido, {{ username }}!</p>
+    {% endif %}
+
+    <h2 class="text-center">Coches Eléctricos</h2>
+
+    <form method="get" class="mb-4">
+        <input type="text" name="q" class="form-control" placeholder="Buscar por marca" value="{{ request.GET.q }}">
+        <button type="submit" class="btn btn-primary mt-2">Buscar</button>
+    </form>
+
+    {% if cars %}
+        <div class="row">
+            {% for car in cars %}
+                <div class="col-md-4">
+                    <div class="card mb-4">
+                        {% if car.image %}
+                            <img src="{{ car.image.url }}" class="card-img-top" alt="{{ car.brand }}">
+                        {% else %}
+                            <img src="{% static 'default_car_image.jpg' %}" class="card-img-top" alt="Coche sin imagen">
+                        {% endif %}
+                        <div class="card-body">
+                            <!-- Enlace al detalle del coche -->
+                            <h5 class="card-title">
+                                <a href="{% url 'car_detail' car.id %}">{{ car.brand }} - {{ car.model }}</a>
+                            </h5>
+                            <p class="card-text">Año: {{ car.year }} | Precio: ${{ car.price }}</p>
+                            <p class="card-text">{{ car.description }}</p>
+
+                            
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <p>No se encontraron coches. Intenta con otra búsqueda.</p>
+    {% endif %}
+</div>
+{% endblock %}

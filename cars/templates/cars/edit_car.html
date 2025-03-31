@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Editar coche{% endblock %}
+
+{% block content %}
+<div class="container">
+    <h2 class="text-center">Editar coche</h2>
+
+    <form method="POST" enctype="multipart/form-data">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit" class="btn btn-success">Guardar cambios</button>
+    </form>
+</div>
+{% endblock %}

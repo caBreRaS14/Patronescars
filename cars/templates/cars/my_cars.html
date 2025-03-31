@@ -1,0 +1,44 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Mis Coches{% endblock %}
+
+{% block content %}
+<div class="container">
+    {% if username %}
+        <p>Bienvenido, {{ username }}!</p>
+    {% endif %}
+
+    <h2 class="text-center">Mis Coches</h2>
+
+    {% if cars %}
+        <div class="row">
+            {% for car in cars %}
+                <div class="col-md-4">
+                    <div class="card mb-4">
+                        {% if car.image %}
+                            <img src="{{ car.image.url }}" class="card-img-top" alt="{{ car.brand }}">
+                        {% else %}
+                            <img src="{% static 'default_car_image.jpg' %}" class="card-img-top" alt="Coche sin imagen">
+                        {% endif %}
+                        <div class="card-body">
+                            <h5 class="card-title">{{ car.brand }} - {{ car.model }}</h5>
+                            <p class="card-text">Año: {{ car.year }} | Precio: ${{ car.price }}</p>
+                            <p class="card-text">{{ car.description }}</p>
+
+                            <!-- Opciones de editar y eliminar solo si es el coche del usuario -->
+                            <a href="{% url 'edit_car' car.id %}" class="btn btn-warning">Editar</a>
+                            <form method="POST" action="{% url 'delete_car' car.id %}" style="display:inline;">
+                                {% csrf_token %}
+                                <button type="submit" class="btn btn-danger">Eliminar</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <p>No tienes coches registrados.</p>
+    {% endif %}
+</div>
+{% endblock %}

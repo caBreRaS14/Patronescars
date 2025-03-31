@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Detalles del coche{% endblock %}
+
+{% block content %}
+<div class="container">
+    <h2 class="text-center">Detalles del Coche</h2>
+
+    <div class="card">
+        {% if car.image %}
+            <img src="{{ car.image.url }}" class="card-img-top" alt="{{ car.brand }}">
+        {% else %}
+            <img src="{% static 'default_car_image.jpg' %}" class="card-img-top" alt="Coche sin imagen">
+        {% endif %}
+        <div class="card-body">
+            <h5 class="card-title">{{ car.brand }} - {{ car.model }}</h5>
+            <p class="card-text">Año: {{ car.year }} | Precio: ${{ car.price }}</p>
+            <p class="card-text">{{ car.description }}</p>
+        </div>
+    </div>
+</div>
+{% endblock %}
