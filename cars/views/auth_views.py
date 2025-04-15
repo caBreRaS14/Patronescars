@@ -24,7 +24,7 @@ def login_view(request):
 
         if user is not None:
             login(request, user)
-            return redirect('home')  # Redirigir a la página principal
+            return redirect('home')
         else:
             messages.error(request, "Usuario o contraseña incorrectos.")
 

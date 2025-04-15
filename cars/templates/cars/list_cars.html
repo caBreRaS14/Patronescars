@@ -4,44 +4,86 @@
 {% block title %}Coches disponibles{% endblock %}
 
 {% block content %}
-<div class="container">
+<div class="container-fluid">
     {% if username %}
         <p>Bienvenido, {{ username }}!</p>
     {% endif %}
 
     <h2 class="text-center">Coches Eléctricos</h2>
 
-    <form method="get" class="mb-4">
-        <input type="text" name="q" class="form-control" placeholder="Buscar por marca" value="{{ request.GET.q }}">
-        <button type="submit" class="btn btn-primary mt-2">Buscar</button>
-    </form>
+    <div class="row mt-4">
+        <!-- Filtros -->
+        <div class="col-md-3">
+            <form method="get" class="mb-4 border rounded p-3 bg-light">
+                <h5>Filtrar por:</h5>
 
-    {% if cars %}
-        <div class="row">
-            {% for car in cars %}
-                <div class="col-md-4">
-                    <div class="card mb-4">
-                        {% if car.image %}
-                            <img src="{{ car.image.url }}" class="card-img-top" alt="{{ car.brand }}">
-                        {% else %}
-                            <img src="{% static 'default_car_image.jpg' %}" class="card-img-top" alt="Coche sin imagen">
-                        {% endif %}
-                        <div class="card-body">
-                            <!-- Enlace al detalle del coche -->
-                            <h5 class="card-title">
-                                <a href="{% url 'car_detail' car.id %}">{{ car.brand }} - {{ car.model }}</a>
-                            </h5>
-                            <p class="card-text">Año: {{ car.year }} | Precio: ${{ car.price }}</p>
-                            <p class="card-text">{{ car.description }}</p>
-
-                            
+                <!-- Marcas como checkboxes -->
+                <div class="mb-3">
+                    <label class="form-label"><strong>Marca</strong></label>
+                    {% for value, label in available_brands %}
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" name="brand" value="{{ value }}"
+                                {% if value in filters.brands %}checked{% endif %}>
+                            <label class="form-check-label">{{ label }}</label>
                         </div>
+                    {% endfor %}
+                </div>
+
+                <!-- Año -->
+                <div class="mb-3">
+                    <label for="year" class="form-label"><strong>Año</strong></label>
+                    <input type="text" name="year" id="year" class="form-control" value="{{ filters.year }}">
+                </div>
+
+                <!-- Rango de precios -->
+                <div class="mb-3">
+                    <label class="form-label"><strong>Precio</strong></label>
+                    <div class="d-flex gap-2">
+                        <input type="number" name="price_min" class="form-control" placeholder="Mín" value="{{ filters.price_min }}">
+                        <input type="number" name="price_max" class="form-control" placeholder="Máx" value="{{ filters.price_max }}">
                     </div>
                 </div>
-            {% endfor %}
+
+                <!-- Descripción -->
+                <div class="mb-3">
+                    <label for="description" class="form-label"><strong>Descripción</strong></label>
+                    <input type="text" name="description" id="description" class="form-control" value="{{ filters.description }}">
+                </div>
+
+                <!-- Botón de filtrar -->
+                <button type="submit" class="btn btn-primary w-100 mt-2">Aplicar Filtros</button>
+            </form>
         </div>
-    {% else %}
-        <p>No se encontraron coches. Intenta con otra búsqueda.</p>
-    {% endif %}
+
+        <!-- Resultados -->
+        <div class="col-md-9">
+            <div id="car-results">
+                {% if cars %}
+                    <div class="row">
+                        {% for car in cars %}
+                            <div class="col-md-4">
+                                <div class="card mb-4">
+                                    {% if car.image %}
+                                        <img src="{{ car.image.url }}" class="card-img-top" alt="{{ car.brand }}">
+                                    {% else %}
+                                        <img src="{% static 'default_car_image.jpg' %}" class="card-img-top" alt="Coche sin imagen">
+                                    {% endif %}
+                                    <div class="card-body">
+                                        <h5 class="card-title">
+                                            <a href="{% url 'car_detail' car.id %}">{{ car.brand }} - {{ car.model }}</a>
+                                        </h5>
+                                        <p class="card-text">Año: {{ car.year }} | Precio: ${{ car.price }}</p>
+                                        <p class="card-text">{{ car.description }}</p>
+                                    </div>
+                                </div>
+                            </div>
+                        {% endfor %}
+                    </div>
+                {% else %}
+                    <p>No se encontraron coches. Intenta con otra búsqueda.</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
 </div>
 {% endblock %}

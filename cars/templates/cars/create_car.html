@@ -14,10 +14,14 @@
                         <label class="form-label">Marca</label>
                         {{ form.brand }}
                     </div>
-                    <div class="mb-3">
-                        <label class="form-label">Modelo</label>
-                        {{ form.model }}
-                    </div>
+                    <select name="model" id="id_model" class="form-select" multiple style="color: black;">
+                        {% for model in form.fields.model.choices %}
+                            <option value="{{ model.0 }}">{{ model.1 }}</option>
+                        {% endfor %}
+                    </select>
+                    
+                    
+                    
                     <div class="mb-3">
                         <label class="form-label">Año</label>
                         {{ form.year }}
@@ -34,10 +38,84 @@
                         <label class="form-label">Imagen</label>
                         {{ form.image }}
                     </div>
-
+                    <div class="mb-3">
+                        <label class="form-label">Lugar de publicación</label>
+                        {{ form.location }}
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Control de tracción</label>
+                        {{ form.traction_control }}
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Kilómetros</label>
+                        {{ form.kilometers }}
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Tipo de carrocería</label>
+                        {{ form.body_type }}
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Tipo de combustible</label>
+                        {{ form.fuel_type }}
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Puertas</label>
+                        {{ form.doors }}
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Transmisión</label>
+                        {{ form.transmission }}
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Dirección</label>
+                        {{ form.steering }}
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Placa</label>
+                        {{ form.plate }}
+                    </div>
+                    
                     <button type="submit" class="btn btn-success w-100">Publicar</button>
                 </form>
             </div>
         </div>
     </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const brandField = document.querySelector('select[name="brand"]');
+            const modelField = document.querySelector('select[name="model"]');
+    
+            brandField.addEventListener('change', function() {
+                const selectedBrand = brandField.value;
+    
+                // Llamada a la vista que devuelve los modelos según la marca
+                fetch(`/get_models_for_brand/${selectedBrand}/`)
+                    .then(response => response.json())
+                    .then(data => {
+                        // Limpiar el campo de modelos
+                        modelField.innerHTML = ''; // Limpiar los modelos previos
+                        
+                        // Agregar opción por defecto
+                        const defaultOption = document.createElement('option');
+                        defaultOption.text = 'Seleccione uno o más modelos';
+                        defaultOption.disabled = true;
+                        defaultOption.selected = true;
+                        modelField.appendChild(defaultOption);
+    
+                        // Rellenar el campo de modelos con los nuevos modelos disponibles
+                        data.models.forEach(model => {
+                            const option = document.createElement('option');
+                            option.value = model.id;
+                            option.textContent = model.name;
+                            modelField.appendChild(option);
+                        });
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                    });
+            });
+        });
+    </script>
+    
 {% endblock %}

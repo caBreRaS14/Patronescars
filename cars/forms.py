@@ -23,22 +23,55 @@ class RegisterForm(forms.ModelForm):
         if password and password_confirm and password != password_confirm:
             self.add_error('password_confirm', "Las contraseñas no coinciden.")
 
-
 class CarForm(forms.ModelForm):
+    model = forms.MultipleChoiceField(
+        required=False,
+        widget=forms.SelectMultiple(attrs={'class': 'form-select', 'multiple': 'multiple', 'style': 'color: black;'}),
+        choices=[],  # Se llenan dinámicamente
+    )
+
     class Meta:
-        model = Car
-        fields = ['brand', 'model', 'year', 'price', 'description', 'image']
-        widgets = {
-            'brand': forms.Select(attrs={'class': 'form-control'}),
-            'model': forms.TextInput(attrs={'class': 'form-control'}),
-            'year': forms.NumberInput(attrs={'class': 'form-control', 'min': 1900, 'max': 2100}),
-            'price': forms.NumberInput(attrs={'class': 'form-control'}),
-            'description': forms.Textarea(attrs={'class': 'form-control', 'rows': 3}),
-            'image': forms.FileInput(attrs={'class': 'form-control'}),
+        model = Car  # ✅ Aquí va el modelo, no un campo de formulario
+        fields = ['brand', 'model', 'year', 'price', 'description', 'image',
+                  'location', 'traction_control', 'kilometers', 'body_type',
+                  'fuel_type', 'doors', 'transmission', 'steering', 'plate']
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+        # Asignar las opciones de marca
+        self.fields['brand'].choices = Car.BRAND_CHOICES
+
+        # Obtener marca seleccionada
+        brand = None
+        if self.data.get('brand'):
+            brand = self.data.get('brand')  # cuando se envía desde el formulario
+        elif self.instance and self.instance.brand:
+            brand = self.instance.brand  # cuando se edita una instancia
+
+        if brand:
+            self.fields['model'].choices = [(m, m) for m in self.get_models_for_brand(brand)]
+        else:
+            self.fields['model'].choices = []
+
+    def get_models_for_brand(self, brand):
+        models = {
+            'Renault': Car.RENAULT_MODELS,
+            'Toyota': Car.TOYOTA_MODELS,
+            'Chevrolet': Car.CHEVROLET_MODELS,
+            'Mazda': Car.MAZDA_MODELS,
+            'Kia': Car.KIA_MODELS,
+            'Hyundai': Car.HYUNDAI_MODELS,
+            'Nissan': Car.NISSAN_MODELS,
+            'Suzuki': Car.SUZUKI_MODELS,
+            'Volkswagen': Car.VOLKSWAGEN_MODELS,
+            'Ford': Car.FORD_MODELS,
+            'BMW': Car.BMW_MODELS,
+            'Audi': Car.AUDI_MODELS,
+            'Tesla': Car.TESLA_MODELS,
+            'Mini': Car.MINI_MODELS,
+            'BYD': Car.BYD_MODELS,
+            'Zhidou': Car.ZHIDOU_MODELS,
+            'Otros': Car.OTHER_MODELS,
         }
-
-
-class CarForm(forms.ModelForm):
-    class Meta:
-        model = Car
-        fields = ['brand', 'model', 'year', 'price', 'description', 'image']  # Los campos que deseas editar
+        return models.get(brand, [])
