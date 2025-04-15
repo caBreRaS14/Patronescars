@@ -84,11 +84,14 @@ WSGI_APPLICATION = 'car_market.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'voltauto_db',  # El nombre de tu base de datos
+        'USER': 'postgres',     # Tu usuario de PostgreSQL
+        'PASSWORD': '2803',  # Tu contraseña de PostgreSQL
+        'HOST': 'localhost',    # Si PostgreSQL está en tu máquina local
+        'PORT': '5432',         # El puerto por defecto
     }
 }
-
 
 # Password validation
 # https://docs.djangoproject.com/en/5.1/ref/settings/#auth-password-validators
