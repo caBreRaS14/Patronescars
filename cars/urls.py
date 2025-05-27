@@ -6,6 +6,7 @@ from django.conf.urls.static import static
 from cars.views.just_car import car_detail
 from cars.views.profile_views import profile
 from cars.views.my_cars import my_cars
+from cars.views.politocas import pqrs
 
 
 
@@ -21,6 +22,7 @@ urlpatterns = [
     path('', list_cars, name='home'),
     path('car/<int:car_id>/', car_detail, name='car_detail'),
     path('my_cars/', my_cars, name='my_cars'),
+    path('pqr/', pqrs, name='pqr'),
     
 
 ]

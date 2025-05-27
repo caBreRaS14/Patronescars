@@ -33,8 +33,6 @@
                             </h5>
                             <p class="card-text">Año: {{ car.year }} | Precio: ${{ car.price }}</p>
                             <p class="card-text">{{ car.description }}</p>
-
-                            
                         </div>
                     </div>
                 </div>
@@ -44,4 +42,8 @@
         <p>No se encontraron coches. Intenta con otra búsqueda.</p>
     {% endif %}
 </div>
+
+{% include 'footer.html' %}
+
 {% endblock %}
+
