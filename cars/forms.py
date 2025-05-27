@@ -1,6 +1,6 @@
 from django import forms
 from django.contrib.auth.models import User
-from .models import Car
+from .models import Car, Comment
 
 
 class RegisterForm(forms.ModelForm):
@@ -42,3 +42,12 @@ class CarForm(forms.ModelForm):
     class Meta:
         model = Car
         fields = ['brand', 'model', 'year', 'price', 'description', 'image']  # Los campos que deseas editar
+
+# comentarios forms
+class CommentForm(forms.ModelForm):
+    class Meta:
+        model = Comment
+        fields = ['content']
+        widgets = {
+            'content': forms.Textarea(attrs={'rows': 3, 'placeholder': 'Escribe tu comentario aquí...'})
+        }
