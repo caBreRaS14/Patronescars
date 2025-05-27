@@ -1,0 +1,37 @@
+{% extends 'base.html' %}
+
+{% block title %}Mis Favoritos | VoltAuto{% endblock %}
+
+{% block content %}
+<div class="container">
+  <h2 class="mb-4 text-center"><i class="bi bi-heart-fill text-danger"></i> Mis Autos Favoritos</h2>
+
+  {% if favorites %}
+    <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-4">
+      {% for fav in favorites %}
+        <div class="col">
+          <div class="card h-100 shadow-sm border-0">
+            {% if fav.car.image %}
+              <img src="{{ fav.car.image.url }}" class="card-img-top" alt="{{ fav.car.brand }} {{ fav.car.model }}" style="height: 180px; object-fit: cover;">
+            {% else %}
+              <img src="https://via.placeholder.com/400x250?text=Sin+Imagen" class="card-img-top" alt="Sin imagen" style="height: 180px; object-fit: cover;">
+            {% endif %}
+            <div class="card-body text-center">
+              <h5 class="card-title">{{ fav.car.brand }} {{ fav.car.model }}</h5>
+              <p class="card-text text-muted">Año: {{ fav.car.year }}</p>
+              <a href="{% url 'car_detail' fav.car.id %}" class="btn btn-outline-primary btn-sm">
+                Ver Detalles
+              </a>
+            </div>
+          </div>
+        </div>
+      {% endfor %}
+    </div>
+  {% else %}
+    <div class="alert alert-info text-center">
+      <i class="bi bi-emoji-frown"></i> No tienes autos favoritos aún.
+    </div>
+  {% endif %}
+</div>
+{% include 'footer.html' %}
+{% endblock %}

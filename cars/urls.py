@@ -7,6 +7,7 @@ from cars.views.just_car import car_detail
 from cars.views.profile_views import profile
 from cars.views.my_cars import my_cars
 from cars.views.politocas import pqrs
+from cars.views.favorite_views import my_favorites_view, user_favorites, toggle_favorite
 
 
 
@@ -23,6 +24,9 @@ urlpatterns = [
     path('car/<int:car_id>/', car_detail, name='car_detail'),
     path('my_cars/', my_cars, name='my_cars'),
     path('pqr/', pqrs, name='pqr'),
+    path('favorito/<int:car_id>/', toggle_favorite, name='toggle_favorite'),
+    path('mis-favoritos/', user_favorites, name='user_favorites'),
+    path('favorites/', my_favorites_view, name='my_favorites'),
     
 
 ]

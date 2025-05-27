@@ -4,18 +4,15 @@ from cars.models import Car
 from django.contrib.auth.decorators import login_required
 from cars.forms import CarForm
 
-# Listar coches
+
 
 def list_cars(request):
-    # Obtenemos todos los coches
     cars = Car.objects.all()
     
-    # Obtener el valor de búsqueda si existe
     query = request.GET.get('q')
     if query:
         cars = cars.filter(brand__icontains=query)
-    
-    # Si el usuario está autenticado, filtrar por el usuario propietario
+
     if request.user.is_authenticated:
         username = request.user.username
         
@@ -31,26 +28,22 @@ def create_car(request):
     if request.method == "POST":
         form = CarForm(request.POST, request.FILES)
         if form.is_valid():
-            car = form.save(commit=False)  # No guarda aún en la BD
-            car.user = request.user  # Asigna el usuario autenticado
-            car.save()  # Guarda el coche en la BD
-            return redirect('list_cars')  # Redirige a la lista de coches
+            car = form.save(commit=False)
+            car.user = request.user
+            car.save()
+            return redirect('list_cars')
     else:
         form = CarForm()
     
     return render(request, 'cars/create_car.html', {'form': form})
 
 
-# Editar coche
 
 @login_required
 def edit_car(request, car_id):
-    # Obtén el coche que se quiere editar
     car = get_object_or_404(Car, id=car_id)
-    
-    # Asegúrate de que el usuario que edita el coche sea el propietario
     if car.user != request.user:
-        return redirect('list_cars')  # Redirige si el usuario no es el propietario
+        return redirect('list_cars')
 
     if request.method == 'POST':
         form = CarForm(request.POST, request.FILES, instance=car)

@@ -27,12 +27,24 @@
                             <img src="{% static 'default_car_image.jpg' %}" class="card-img-top" alt="Coche sin imagen">
                         {% endif %}
                         <div class="card-body">
-                            <!-- Enlace al detalle del coche -->
                             <h5 class="card-title">
                                 <a href="{% url 'car_detail' car.id %}">{{ car.brand }} - {{ car.model }}</a>
                             </h5>
                             <p class="card-text">Año: {{ car.year }} | Precio: ${{ car.price }}</p>
                             <p class="card-text">{{ car.description }}</p>
+
+                            {% if user.is_authenticated %}
+                                <form action="{% url 'toggle_favorite' car.id %}" method="post" style="display:inline;">
+                                    {% csrf_token %}
+                                    <button type="submit" style="border: none; background: none; padding: 0;">
+                                        {% if car.id in favorite_ids %}
+                                            <span style="font-size: 24px; color: red;">❤️</span>
+                                        {% else %}
+                                            <span style="font-size: 24px; color: grey;">🤍</span>
+                                        {% endif %}
+                                    </button>
+                                </form>
+                            {% endif %}
                         </div>
                     </div>
                 </div>
@@ -42,8 +54,5 @@
         <p>No se encontraron coches. Intenta con otra búsqueda.</p>
     {% endif %}
 </div>
-
 {% include 'footer.html' %}
-
 {% endblock %}
-
